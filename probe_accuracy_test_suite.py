@@ -146,17 +146,22 @@ class Probe():
                         self.isBeacon = True
                         print(f"{ CLEAR_LINE }Probe type: Cartographer probe detected")
                 except:
-
-
                     try:
-                        endstop_pin = self.printer.config["stepper_z"]["endstop_pin"]
-                        #print(endstop_pin)
-
-                        if re.search("probe:\s*z_virtual_endstop", endstop_pin):
-                            self.isTap = True
-                            print(f"{ CLEAR_LINE }Probe type: Tap mode detected")
+                        backlash_comp = self.printer.config["scanner"].get("backlash_comp", 0)
+                        #print(backlash_comp)
+                        if backlash_comp:
+                            self.isBeacon = True
+                            print(f"{ CLEAR_LINE }Probe type: Cartographer probe detected")
                     except:
-                        pass
+                        try:
+                            endstop_pin = self.printer.config["stepper_z"]["endstop_pin"]
+                            #print(endstop_pin)
+
+                            if re.search("probe:\s*z_virtual_endstop", endstop_pin):
+                                self.isTap = True
+                                print(f"{ CLEAR_LINE }Probe type: Tap mode detected")
+                        except:
+                            pass
 
 
 class Printer:
@@ -362,9 +367,13 @@ class Printer:
                     y_offset = self.config["cartographer"].get("y_offset", 0)
                 except:
                     try:
-                        x_offset = self.config["beacon"].get("x_offset", 0)
-                        y_offset = self.config["beacon"].get("y_offset", 0)
+                        x_offset = self.config["scanner"].get("x_offset", 0)
+                        y_offset = self.config["scanner"].get("y_offset", 0)
                     except:
+                        try:
+                            x_offset = self.config["beacon"].get("x_offset", 0)
+                            y_offset = self.config["beacon"].get("y_offset", 0)
+                        except:
                             pass
 
 
