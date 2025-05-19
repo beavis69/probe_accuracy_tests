@@ -658,7 +658,7 @@ class Test_suite():
         if speed:
             gcode_cmd += f" PROBE_SPEED={ speed }"
         elif self.speed:
-            gcode_cmd += f" PROBE_SPEED={ self.speed }"
+            gcode_cmd += f" PROBE_SPEED={ self.speed[0] }"
         self.printer.gcode(gcode_cmd)
 
         raw = self.printer.get_gcode_store(count = 1000)
